@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/logo.png">
+    <title>Song Sphere</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-color-light: #f0f2f5;
+            --text-color-light: #333;
+            --primary-color-light: #6c5ce7; /* A vibrant purple */
+            --card-bg-light: #fff;
+            --border-color-light: #e0e0e0;
+
+            --bg-color-dark: #1a1a2e; /* Deep purple-blue */
+            --text-color-dark: #e0e0e0;
+            --primary-color-dark: #ff4757; /* A vibrant red-pink */
+            --card-bg-dark: #272740; /* Slightly lighter dark card */
+            --border-color-dark: #3a3a5f;
+
+            /* RGB Gradient Colors for borders (common for both themes) */
+            --gradient-start-rgb: 255, 0, 150;   /* Pink-Red */
+            --gradient-mid-rgb: 0, 200, 255;     /* Cyan */
+            --gradient-end-rgb: 150, 0, 255;     /* Purple */
+
+            /* Dark theme specific gradient for borders */
+            --gradient-dark-start-rgb: 255, 71, 87; /* Red */
+            --gradient-dark-mid-rgb: 255, 140, 0;   /* Orange */
+            --gradient-dark-end-rgb: 255, 20, 147;  /* Deep Pink */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        body.dark-theme {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px; /* Slightly narrower for a more Spotify-like list */
+            background-color: var(--card-bg-light);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 80vh;
+            overflow: hidden;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            padding-bottom: 30px;
+        }
+
+        body.dark-theme .container {
+            background-color: var(--card-bg-dark);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-color-light);
+            transition: border-color 0.3s ease;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 10;
+            background-color: inherit;
+        }
+
+        body.dark-theme .header {
+            border-color: var(--border-color-dark);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary-color-light);
+            transition: color 0.3s ease;
+        }
+
+        body.dark-theme .header h1 {
+            color: var(--primary-color-dark);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: var(--text-color-light);
+            transition: color 0.3s ease, transform 0.2s ease;
+            outline: none;
+        }
+
+        body.dark-theme .theme-toggle {
+            color: var(--text-color-dark);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            color: var(--primary-color-light);
+        }
+        body.dark-theme .theme-toggle:hover {
+            color: var(--primary-color-dark);
+        }
+
+        /* Music List Section */
+        .music-list-section {
+            flex-grow: 1;
+            padding: 0 30px;
+            overflow-y: auto;
+        }
+
+        .music-list {
+            display: flex; /* Use flexbox for a more compact, potentially scrollable list */
+            flex-direction: column; /* Stack items vertically */
+            gap: 10px; /* Smaller gap between list items */
+            padding-bottom: 20px;
+        }
+
+        .music-item {
+            background-color: var(--card-bg-light);
+            border-radius: 12px; /* Slightly smaller border radius */
+            padding: 15px; /* Smaller padding */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Lighter shadow */
+            display: flex; /* Arrange content horizontally */
+            align-items: center;
+            gap: 15px; /* Space between image and text */
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        body.dark-theme .music-item {
+            background-color: var(--card-bg-dark);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Hover effect for border animation */
+        .music-item:hover {
+            transform: translateY(-3px); /* Less lift */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
+        }
+        body.dark-theme .music-item:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+        }
+
+        .music-item::before {
+            content: '';
+            position: absolute;
+            top: -1px; /* Just enough to show a thin border */
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            border-radius: 13px; /* Matches card's border-radius + padding */
+            z-index: -1;
+            opacity: 0;
+            filter: blur(3px); /* Less blur for thinner border */
+            transition: opacity 0.3s ease, filter 0.3s ease;
+
+            background: linear-gradient(
+                90deg,
+                rgb(var(--gradient-start-rgb)),
+                rgb(var(--gradient-mid-rgb)),
+                rgb(var(--gradient-end-rgb)),
+                rgb(var(--gradient-mid-rgb)),
+                rgb(var(--gradient-start-rgb))
+            );
+            background-size: 200% 100%;
+            animation: gradientBorderLight 4s linear infinite;
+
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        body.dark-theme .music-item::before {
+            background: linear-gradient(
+                90deg,
+                rgb(var(--gradient-dark-start-rgb)),
+                rgb(var(--gradient-dark-mid-rgb)),
+                rgb(var(--gradient-dark-end-rgb)),
+                rgb(var(--gradient-dark-mid-rgb)),
+                rgb(var(--gradient-dark-start-rgb))
+            );
+            animation: gradientBorderDark 4s linear infinite;
+        }
+
+        @keyframes gradientBorderLight {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        @keyframes gradientBorderDark {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .music-item:hover::before {
+            opacity: 1;
+            filter: blur(1px); /* Sharper, subtle blur on hover */
+        }
+
+        .music-item img {
+            width: 60px; /* Small album cover */
+            height: 60px;
+            border-radius: 8px; /* Slightly smaller border radius for covers */
+            object-fit: cover;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0; /* Prevent image from shrinking */
+        }
+
+        .music-item-details {
+            flex-grow: 1; /* Allow text to take available space */
+            text-align: left; /* Align text to the left */
+            white-space: nowrap; /* Prevent text from wrapping */
+            overflow: hidden; /* Hide overflowed text */
+            text-overflow: ellipsis; /* Add ellipsis for overflow */
+        }
+
+        .music-item h3 {
+            margin: 0;
+            font-size: 1.1em; /* Smaller title */
+            font-weight: 600;
+            color: var(--text-color-light);
+            transition: color 0.3s ease;
+        }
+        body.dark-theme .music-item h3 {
+            color: var(--text-color-dark);
+        }
+
+        .music-item p.artist, .music-item p.duration {
+            margin: 0;
+            font-size: 0.9em; /* Smaller font for artist/duration */
+            color: #888;
+            line-height: 1.3;
+        }
+        body.dark-theme .music-item p.artist, body.dark-theme .music-item p.duration {
+            color: #aaa;
+        }
+
+        .music-item p.duration {
+            text-align: right; /* Align duration to the right */
+            flex-shrink: 0; /* Prevent duration from shrinking */
+            width: 45px; /* Fixed width for consistent alignment */
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                margin: 20px 0;
+                padding-bottom: 20px;
+            }
+
+            .header {
+                flex-direction: row; /* Keep side-by-side on mobile */
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px 20px; /* Reduced padding */
+            }
+
+            .header h1 {
+                font-size: 1.8em; /* Smaller heading */
+            }
+            .theme-toggle {
+                font-size: 1.8em; /* Match heading size */
+            }
+
+            .music-list-section {
+                padding: 0 20px; /* Reduced padding */
+            }
+
+            .music-list {
+                gap: 8px; /* Even smaller gap */
+            }
+
+            .music-item {
+                padding: 12px; /* Reduced padding */
+                gap: 12px;
+            }
+
+            .music-item img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .music-item h3 {
+                font-size: 1em;
+            }
+
+            .music-item p.artist, .music-item p.duration {
+                font-size: 0.8em;
+            }
+            .music-item p.duration {
+                width: 40px; /* Adjust for smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 15px;
+            }
+            .header h1 {
+                font-size: 1.5em;
+            }
+            .theme-toggle {
+                font-size: 1.5em;
+            }
+            .music-list-section {
+                padding: 0 10px;
+            }
+            .music-item {
+                padding: 10px;
+                gap: 10px;
+            }
+            .music-item img {
+                width: 45px;
+                height: 45px;
+            }
+            .music-item h3 {
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Song Sphere</h1>
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <main class="music-list-section">
+            <div id="music-list" class="music-list">
+                </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+            const musicListContainer = document.getElementById('music-list');
+
+            // Sample Music Data (Updated paths: 'assets' for covers, 'musics' for MP3s)
+            const musicData = [
+                {
+                    title: "Empire",
+                    artist: "Ogryzek",
+                    cover: "assets/empire.jpg",
+                    src: "musics/empire.mp3",
+                    duration: "Loading..." // Will be updated
+                },
+                {
+                    title: "Mexican Funk Eki",
+                    artist: "",
+                    cover: "assets/eki.jpg",
+                    src: "musics/eki.mp3",
+                    duration: "Loading..."
+                },
+                {
+                    title: "Slava Funk",
+                    artist: "",
+                    cover: "assets/slava.jpg",
+                    src: "musics/slava.mp3",
+                    duration: "Loading..."
+                },
+                {
+                    title: "Hypnotic",
+                    artist: "",
+                    cover: "assets/hypnotic.png",
+                    src: "musics/hypnotic.mp3",
+                    duration: "Loading..."
+                },
+                {
+                    title: "Funk Infernal",
+                    artist: "",
+                    cover: "assets/infernal.jpg",
+                    src: "musics/infernal.mp3",
+                    duration: "Loading..."
+                },
+                 {
+                    title: "El Que La Debe Funk",
+                    artist: "",
+                    cover: "assets/elque.webp",
+                    src: "musics/elque.mp3",
+                    duration: "Loading..."
+                },
+                {
+                    title: "Aria Math",
+                    artist: "",
+                    cover: "assets/aria.png",
+                    src: "musics/aria.mp3",
+                    duration: "Loading..."
+                },
+                {
+                    title: "Volkswagen Funk",
+                    artist: "",
+                    cover: "assets/volks.png",
+                    src: "musics/volks.mp3",
+                    duration: "Loading..."
+                },
+                {
+                    title: "Technologia Funk",
+                    artist: "",
+                    cover: "assets/tech.png",
+                    src: "musics/tech.mp3",
+                    duration: "Loading..."
+                },
+                {
+                    title: "Phut Hon Funk (Salesman)",
+                    artist: "",
+                    cover: "assets/sale.jpg",
+                    src: "musics/sale.mp3",
+                    duration: "Loading..."
+                },
+                {
+                    title: "Avangard",
+                    artist: "",
+                    cover: "assets/ava.jpg",
+                    src: "musics/ava.mp3",
+                    duration: "Loading..."
+                },
+                {
+                    title: "Aura",
+                    artist: "Ogryzek",
+                    cover: "assets/aura.jpg",
+                    src: "musics/aura.mp3",
+                    duration: "Loading..."
+                }
+            ];
+
+            // --- Theme Toggle ---
+            themeToggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-theme');
+                const icon = themeToggleBtn.querySelector('i');
+                if (body.classList.contains('dark-theme')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            });
+
+            // --- Format Time Helper ---
+            function formatTime(seconds) {
+                if (isNaN(seconds) || seconds < 0) return "0:00";
+                const minutes = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+
+            // --- Load Music List ---
+            function loadMusicList() {
+                musicListContainer.innerHTML = '';
+                musicData.forEach((music, index) => {
+                    const musicItem = document.createElement('div');
+                    musicItem.classList.add('music-item');
+                    musicItem.setAttribute('data-index', index); // Store index for later use
+
+                    musicItem.innerHTML = `
+                        <img src="${music.cover}" alt="${music.title} Cover">
+                        <div class="music-item-details">
+                            <h3>${music.title}</h3>
+                            <p class="artist">${music.artist}</p>
+                        </div>
+                        <p class="duration">${music.duration}</p>
+                    `;
+                    musicListContainer.appendChild(musicItem);
+
+                    // Add click listener to open player.html
+                    musicItem.addEventListener('click', () => {
+                        window.location.href = `player.html?songIndex=${index}`;
+                    });
+
+                    // Load audio to get duration (hidden element)
+                    const audio = new Audio(music.src);
+                    audio.preload = 'metadata'; // Only load metadata, not the whole file
+                    audio.addEventListener('loadedmetadata', () => {
+                        musicItem.querySelector('.duration').textContent = formatTime(audio.duration);
+                    });
+                    audio.addEventListener('error', (e) => {
+                        console.error(`Error loading metadata for ${music.title}:`, e);
+                        musicItem.querySelector('.duration').textContent = "Error";
+                    });
+                });
+            }
+
+            // Initial load of music list
+            loadMusicList();
+        });
+    </script>
+</body>
+</html>
