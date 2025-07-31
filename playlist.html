@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* --- General Theme & Structure --- */
+        :root {
+            --background-color: #121212;
+            --background-secondary: #1e1e1e;
+            --text-color: #ffffff;
+            --secondary-text-color: #b3b3b3;
+            --accent-color: #1db954;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: var(--background-secondary);
+            border-radius: 20px;
+            box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            min-height: 500px;
+        }
+
+        .page-title {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        /* --- Playlist Grid View --- */
+        #playlist-grid-view {
+            display: block; /* Initially visible */
+        }
+        
+        .playlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .playlist-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: var(--background-color);
+            border-radius: 15px;
+            padding: 15px;
+            text-decoration: none;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .playlist-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .playlist-cover-img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .playlist-info h2 {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .playlist-info p {
+            font-size: 0.9em;
+            color: var(--secondary-text-color);
+            margin: 5px 0 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* --- Player View --- */
+        #player-view {
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            #player-view {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+        }
+        
+        .player-container {
+            text-align: center;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+             .player-container {
+                width: 400px;
+                flex-shrink: 0;
+            }
+        }
+
+        .music-cover {
+            width: 250px;
+            height: 250px;
+            border-radius: 15px;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .music-info h1 {
+            font-size: 1.8em;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .music-info p {
+            font-size: 1.1em;
+            color: var(--secondary-text-color);
+            margin: 5px 0 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 2em;
+            cursor: pointer;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .control-btn:hover {
+            color: var(--accent-color);
+        }
+
+        .control-btn.play-pause {
+            font-size: 3em;
+        }
+
+        /* --- Playlist Song List (in Player View) --- */
+        .playlist-list-container {
+            width: 100%;
+        }
+        
+        .playlist-list-title {
+            color: var(--text-color);
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .song-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .song-item {
+            background-color: var(--background-color);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: background-color 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .song-item:hover {
+            background-color: #2a2a2a;
+        }
+        
+        .song-item.current-song {
+            background-color: var(--accent-color);
+        }
+
+        .song-item.current-song .song-link {
+             color: #000;
+        }
+
+        .song-link {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .song-cover-small {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .song-info {
+            flex-grow: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .song-title {
+            font-size: 1em;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .song-artist {
+            font-size: 0.9em;
+            margin: 2px 0 0;
+            color: var(--secondary-text-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .song-item.current-song .song-title,
+        .song-item.current-song .song-artist {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div id="playlist-grid-view">
+            <h1 class="page-title">My Playlists</h1>
+            <div class="playlist-grid" id="playlist-grid">
+                </div>
+        </div>
+
+        <div id="player-view">
+            <div class="player-container">
+                <img id="music-cover" class="music-cover" src="" alt="Album Cover">
+                <div class="music-info">
+                    <h1 id="music-title"></h1>
+                    <p id="music-artist"></p>
+                </div>
+                <div class="controls">
+                    <button class="control-btn" id="prev-btn"><i class="fas fa-backward"></i></button>
+                    <button class="control-btn play-pause" id="play-pause-btn"><i class="fas fa-play"></i></button>
+                    <button class="control-btn" id="next-btn"><i class="fas fa-forward"></i></button>
+                </div>
+                <audio id="audio-player"></audio>
+            </div>
+            
+            <div class="playlist-list-container">
+                <h2 id="playlist-list-title" class="playlist-list-title">Up Next</h2>
+                <ul id="up-next-list" class="song-list">
+                    </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const playlists = {
+            summer: {
+                title: "Aura Booster",
+                artist: "Song Sphere",
+                cover: "assets/aurab.png",
+                songs: [
+                    { title: "Summer Vibes", artist: "Chillwave Collective", cover: "assets/empire.jpg", src: "musics/empire.mp3" },
+                    { title: "Urban Groove", artist: "Beat Fusion", cover: "assets/eki.jpg", src: "musics/eki.mp3" },
+                    { title: "Midnight Stroll", artist: "Lo-Fi Beats", cover: "assets/lofi.jpg", src: "musics/lofi.mp3" },
+                    { title: "Cosmic Echoes", artist: "Starlight Collective", cover: "assets/music-2.jpg", src: "musics/music-2.mp3" },
+                    { title: "Ocean Breeze", artist: "Acoustic Tides", cover: "assets/music-3.jpg", src: "musics/music-3.mp3" }
+                ]
+            },
+            lofi: {
+                title: "Coming Soon",
+                artist: "",
+                cover: "assets/coming.png",
+                songs: [
+                    { title: "Coming Soon", artist: "", cover: "assets/coming.png", src: "" },
+                ]
+            },
+            lofi2: {
+                title: "Coming Soon",
+                artist: "",
+                cover: "assets/coming.png",
+                songs: [
+                    { title: "Coming Soon", artist: "", cover: "assets/coming.png", src: "" },
+                ]
+            }
+        };
+
+        // --- DOM Elements ---
+        const playlistGridView = document.getElementById('playlist-grid-view');
+        const playlistGrid = document.getElementById('playlist-grid');
+        const playerView = document.getElementById('player-view');
+        const audioPlayer = document.getElementById('audio-player');
+        const musicCover = document.getElementById('music-cover');
+        const musicTitle = document.getElementById('music-title');
+        const musicArtist = document.getElementById('music-artist');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const upNextList = document.getElementById('up-next-list');
+        const playlistListTitle = document.getElementById('playlist-list-title');
+
+        // --- STATE Variables ---
+        let currentMusicData = [];
+        let songIndex = 0;
+        let isPlaying = false;
+
+        // --- Functions ---
+        function renderPlaylists() {
+            for (const key in playlists) {
+                const playlist = playlists[key];
+                const playlistCard = document.createElement('div');
+                playlistCard.classList.add('playlist-card');
+                playlistCard.setAttribute('data-playlist-key', key);
+                playlistCard.innerHTML = `
+                    <img src="${playlist.cover}" alt="${playlist.title}" class="playlist-cover-img">
+                    <div class="playlist-info">
+                        <h2>${playlist.title}</h2>
+                        <p>${playlist.artist}</p>
+                    </div>
+                `;
+                playlistGrid.appendChild(playlistCard);
+            }
+        }
+
+        function renderUpNextList() {
+            upNextList.innerHTML = '';
+            currentMusicData.forEach((song, index) => {
+                const songItem = document.createElement('li');
+                songItem.classList.add('song-item');
+                if (index === songIndex) {
+                    songItem.classList.add('current-song');
+                }
+                songItem.innerHTML = `
+                    <div class="song-link" data-song-index="${index}">
+                        <img src="${song.cover}" alt="${song.title}" class="song-cover-small">
+                        <div class="song-info">
+                            <h3 class="song-title">${song.title}</h3>
+                            <p class="song-artist">${song.artist}</p>
+                        </div>
+                    </div>
+                `;
+                upNextList.appendChild(songItem);
+            });
+        }
+
+        function loadSong(song) {
+            musicTitle.textContent = song.title;
+            musicArtist.textContent = song.artist;
+            musicCover.src = song.cover;
+            audioPlayer.src = song.src;
+            renderUpNextList();
+        }
+
+        function playSong() {
+            isPlaying = true;
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            audioPlayer.play();
+            renderUpNextList();
+        }
+
+        function pauseSong() {
+            isPlaying = false;
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            audioPlayer.pause();
+        }
+
+        function nextSong() {
+            songIndex = (songIndex + 1) % currentMusicData.length;
+            loadSong(currentMusicData[songIndex]);
+            playSong();
+        }
+
+        function prevSong() {
+            songIndex = (songIndex - 1 + currentMusicData.length) % currentMusicData.length;
+            loadSong(currentMusicData[songIndex]);
+            playSong();
+        }
+
+        function handlePlaylistClick(event) {
+            const card = event.target.closest('.playlist-card');
+            if (card) {
+                const playlistKey = card.getAttribute('data-playlist-key');
+                currentMusicData = playlists[playlistKey].songs;
+                
+                playlistListTitle.textContent = playlists[playlistKey].title;
+                
+                playlistGridView.style.display = 'none';
+                playerView.style.display = 'flex';
+
+                songIndex = 0;
+                loadSong(currentMusicData[songIndex]);
+                playSong();
+            }
+        }
+        
+        function handleSongClick(event) {
+            const songLink = event.target.closest('.song-link');
+            if (songLink) {
+                const newIndex = parseInt(songLink.getAttribute('data-song-index'), 10);
+                if (newIndex !== songIndex) {
+                    songIndex = newIndex;
+                    loadSong(currentMusicData[songIndex]);
+                    playSong();
+                }
+            }
+        }
+
+        // --- Event Listeners ---
+        playlistGrid.addEventListener('click', handlePlaylistClick);
+        upNextList.addEventListener('click', handleSongClick);
+        playPauseBtn.addEventListener('click', () => { isPlaying ? pauseSong() : playSong(); });
+        nextBtn.addEventListener('click', nextSong);
+        prevBtn.addEventListener('click', prevSong);
+        audioPlayer.addEventListener('ended', nextSong);
+
+        // --- Initial Call ---
+        renderPlaylists();
+    </script>
+
+</body>
+</html>

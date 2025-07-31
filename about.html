@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0b0d15;
+            color: #a2a5b3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            width: 90%;
+            max-width: 900px;
+            padding: 40px;
+            text-align: center;
+            border-radius: 20px;
+            background-color: transparent;
+        }
+        
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: center; /* Centered header content */
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .main-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* --- About Section --- */
+        .about-section {
+            text-align: left;
+            margin-bottom: 40px;
+            color: #a2a5b3;
+        }
+
+        .about-section h2 {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        /* --- Animated Card (Your Provided Code) --- */
+        .card{
+        margin: 0 auto;
+        padding: 2em;
+        width: 70%;
+        background: #1c1f2b;
+        text-align: center;
+        border-radius: 10px;
+        position: relative;
+        }
+
+        @property --angle{
+        syntax: "<angle>";
+        initial-value: 0deg;
+        inherits: false;
+        }
+
+        .card::after, .card::before{
+        content: '';
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background-image: conic-gradient(from var(--angle), #ff4545, #00ff99, #006aff, #ff0095, #ff4545);
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+        z-index: -1;
+        padding: 3px;
+        border-radius: 10px;
+        animation: 3s spin linear infinite;
+        }
+        .card::before{
+        filter: blur(1.5rem);
+        opacity: 0.5;
+        }
+        @keyframes spin{
+        from{
+            --angle: 0deg;
+        }
+        to{
+            --angle: 360deg;
+        }
+        }
+        
+        .card h3 {
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .card p {
+            color: #a2a5b3;
+            font-size: 0.9em;
+            z-index: 1;
+            position: relative;
+        }
+
+        /* --- Sources Section --- */
+        .sources-section {
+            text-align: left;
+            margin-top: 40px;
+            border-top: 1px solid #a2a5b3;
+            padding-top: 20px;
+        }
+        
+        .sources-section h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .sources-section ul {
+            list-style-type: none;
+            padding-left: 0;
+            color: #a2a5b3;
+        }
+
+        .sources-section ul li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="main-title">About Us</h1>
+        </header>
+
+        <section class="about-section">
+            <h2>Our Mission</h2>
+            <p>Welcome to our platform! We are dedicated to providing a seamless and engaging experience for music lovers. Our goal is to create a user-friendly interface that allows you to discover, enjoy, and organize your favorite music with ease.</p>
+            <p>Our app focuses on dynamic visuals and a clean, modern design. We believe that a great music experience is not just about the audio, but also about the look and feel of the interface. Thank you for being a part of our journey!</p>
+        </section>
+
+        <div class="card">
+            <h3>Upcoming Updates</h3>
+            <p>We are constantly working on new features and improvements to enhance your experience. Stay tuned for exciting new playlists, dynamic themes, and personalized recommendations coming soon!<br>This are some upcoming features :<br>- You can listen songs without internet once it is loaded.<br>- You can download playlists.<br>- We will add more songs and musics.<br>- Categorised songs and musics.</p>
+        </div>
+        
+        <section class="sources-section">
+            <h2>Asset Sources</h2>
+            <p>Here you can list the sources for the music files, album covers, and other assets used in the application. It's important to give credit to the original creators and ensure you have the proper licenses for all materials.</p>
+            <ul>
+                <li><strong>Songs and Musics:</strong></li>
+                <li><strong>Songs and Musics Covers:</strong> [List of cover art sources and artists]</li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
