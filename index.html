@@ -75,6 +75,10 @@
             z-index: 1; /* Ensure container is below overlay/sidebar */
         }
 
+        .container.initially-hidden {
+            display: none;
+        }
+
         body.dark-theme .container {
             background-color: var(--card-bg-dark);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -85,6 +89,59 @@
             filter: blur(8px);
             pointer-events: none; /* Prevent interaction with blurred content */
             user-select: none; /* Prevent selection of blurred text */
+        }
+
+        /* --- Loading Screen Styles --- */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color-light);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        body.dark-theme .loading-screen {
+            background-color: var(--bg-color-dark);
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid var(--primary-color-light);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        body.dark-theme .loader {
+            border-top: 8px solid var(--primary-color-dark);
+        }
+
+        .loading-screen p {
+            font-size: 1.2em;
+            color: var(--text-color-light);
+        }
+
+        body.dark-theme .loading-screen p {
+            color: var(--text-color-dark);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
         }
 
         /* --- Header Styles --- */
@@ -555,7 +612,12 @@
     </style>
 </head>
 <body>
-    <div class="container" id="main-container">
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+        <p>Loading Music...</p>
+    </div>
+
+    <div class="container initially-hidden" id="main-container">
         <header class="header">
             <h1>Song Sphere</h1>
             <div class="header-controls">
@@ -602,6 +664,7 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
             const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+            const loadingScreen = document.getElementById('loading-screen');
 
             const musicData = [
                 {
@@ -749,6 +812,21 @@
             // --- Load Music List ---
             function loadMusicList() {
                 musicListContainer.innerHTML = '';
+                let loadedCount = 0;
+                const totalSongs = musicData.length;
+
+                function checkAllLoaded() {
+                    loadedCount++;
+                    if (loadedCount === totalSongs) {
+                        // All songs have loaded or errored out
+                        setTimeout(() => {
+                            loadingScreen.classList.add('hidden');
+                            mainContainer.classList.remove('initially-hidden');
+                            mainContainer.style.display = 'flex'; 
+                        }, 500); // A small delay to prevent abrupt change
+                    }
+                }
+
                 musicData.forEach((music, index) => {
                     const musicItem = document.createElement('div');
                     musicItem.classList.add('music-item', 'hidden');
@@ -778,10 +856,12 @@
                     audio.preload = 'metadata';
                     audio.addEventListener('loadedmetadata', () => {
                         musicItem.querySelector('.duration').textContent = formatTime(audio.duration);
+                        checkAllLoaded();
                     });
                     audio.addEventListener('error', (e) => {
                         console.error(`Error loading metadata for ${music.title}:`, e);
                         musicItem.querySelector('.duration').textContent = "Error";
+                        checkAllLoaded(); // Count errors as "loaded" to not block the UI
                     });     
                 });
             }
