@@ -25,13 +25,12 @@
             --gradient-dark-start-rgb: 255, 71, 87;
             --gradient-dark-mid-rgb: 255, 140, 0;
             --gradient-dark-end-rgb: 255, 20, 147;
-            --progress-fill-animation: progressFillLight 4s linear infinite;
-            --progress-fill-gradient: linear-gradient( to right, rgb(var(--gradient-mid-rgb)) 50%, rgb(var(--gradient-end-rgb)) 100% );
-        }
-
-        body.dark-theme {
-            --progress-fill-animation: progressFillDark 4s linear infinite;
-            --progress-fill-gradient: linear-gradient( to right, rgb(var(--gradient-dark-mid-rgb)) 50%, rgb(var(--gradient-dark-end-rgb)) 100% );
+            
+            /* NEW: Variables for slider fill and thumb colors */
+            --progress-color-light: #585858;
+            --progress-color-dark: #747474;
+            --thumb-color-light: #000000;
+            --thumb-color-dark: #afafaf;
         }
 
         body {
@@ -45,7 +44,7 @@
             background-color: var(--bg-color-light);
             color: var(--text-color-light);
             transition: background-color 0.3s ease, color 0.3s ease;
-            overflow-x: hidden; /* ** FIXED: Disabled horizontal scroll ** */
+            overflow-x: hidden;
             line-height: 1.6;
         }
 
@@ -90,7 +89,93 @@
             box-sizing: border-box;
         }
         
-        .player-container:before{content:'';position:absolute;top:-3px;left:-3px;right:-3px;bottom:-3px;border-radius:23px;z-index:-1;opacity:1;filter:blur(5px);background:linear-gradient(90deg,rgb(var(--gradient-start-rgb)),rgb(var(--gradient-mid-rgb)),rgb(var(--gradient-end-rgb)),rgb(var(--gradient-mid-rgb)),rgb(var(--gradient-start-rgb)));background-size:200% 100%;animation:gradientBorderLight 4s linear infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}body.dark-theme .player-container:before{background:linear-gradient(90deg,rgb(var(--gradient-dark-start-rgb)),rgb(var(--gradient-dark-mid-rgb)),rgb(var(--gradient-dark-end-rgb)),rgb(var(--gradient-dark-mid-rgb)),rgb(var(--gradient-dark-start-rgb)));animation:gradientBorderDark 4s linear infinite}@keyframes gradientBorderLight{0%{background-position:0 50%}100%{background-position:100% 50%}}@keyframes gradientBorderDark{0%{background-position:0 50%}100%{background-position:100% 50%}}.top-controls{position:absolute;top:25px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 25px;width:100%;box-sizing:border-box;z-index:2}.back-button,.theme-toggle{background:0 0;border:none;font-size:1.8em;cursor:pointer;color:var(--text-color-light);transition:color .3s ease,transform .2s ease;outline:0;flex-shrink:0}body.dark-theme .back-button,body.dark-theme .theme-toggle{color:var(--text-color-dark)}.back-button:hover{transform:translateX(-5px) scale(1.05);color:var(--primary-color-light)}body.dark-theme .back-button:hover{color:var(--primary-color-dark)}.theme-toggle:hover{transform:scale(1.1);color:var(--primary-color-light)}body.dark-theme .theme-toggle:hover{color:var(--primary-color-dark)}.cover-image{width:clamp(180px,35vh,280px);height:clamp(180px,35vh,280px);border-radius:15px;object-fit:cover;box-shadow:0 10px 25px rgba(0,0,0,.2);transition:transform .3s ease,box-shadow .3s ease}.cover-image:hover{transform:scale(1.02);box-shadow:0 15px 35px rgba(0,0,0,.3)}.song-details h2{margin:0 0 5px;font-size:clamp(1.5em,4.5vh,2.4em);font-weight:700;color:var(--text-color-light);transition:color .3s ease}body.dark-theme .song-details h2{color:var(--text-color-dark)}.song-details p{margin:0;font-size:clamp(1em,2.5vh,1.3em);color:#888}.song-details .duration{font-size:clamp(.9em,2vh,1.1em);color:#555;font-weight:500}body.dark-theme .song-details .duration{color:#aaa}.player-controls-group{width:100%;display:flex;flex-direction:column;gap:clamp(15px,2vh,25px);align-items:center}.main-controls{display:flex;justify-content:center;align-items:center;gap:clamp(15px,3vw,25px);width:100%}.player-btn{background:var(--primary-color-light);color:#fff;border:none;width:clamp(40px,8vw,55px);height:clamp(40px,8vw,55px);border-radius:50%;font-size:clamp(1.4em,2.5vw,1.8em);display:flex;justify-content:center;align-items:center;cursor:pointer;transition:background-color .3s ease,transform .2s ease,box-shadow .3s ease;box-shadow:0 5px 15px rgba(0,0,0,.25);outline:0}body.dark-theme .player-btn{background:var(--primary-color-dark);box-shadow:0 5px 15px rgba(0,0,0,.4)}.player-btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.35);background-color:#5a4bda}body.dark-theme .player-btn:hover{background-color:#dc3e4e}.player-btn.play-pause{width:clamp(55px,11vw,70px);height:clamp(55px,11vw,70px);font-size:clamp(2em,3.5vw,2.5em)}.progress-bar-container{display:flex;align-items:center;width:100%;gap:10px}.current-time,.total-time{font-size:.9em;color:#777;min-width:45px;text-align:center;transition:color .3s ease}body.dark-theme .current-time,body.dark-theme .total-time{color:#ccc}.progress-bar{flex-grow:1;-webkit-appearance:none;height:10px;border-radius:5px;background:var(--border-color-light);outline:0;transition:background-color .3s ease;cursor:pointer}body.dark-theme .progress-bar{background:var(--border-color-dark)}.progress-bar::-webkit-slider-runnable-track{height:10px;border-radius:5px;background:var(--progress-fill-gradient) no-repeat;background-size:var(--progress-width,0) 100%;background-position:var(--progress-gradient-pos,0) 0;animation:var(--progress-fill-animation);animation-play-state:var(--progress-fill-animation-play-state,paused)}.progress-bar::-moz-range-track{height:10px;border-radius:5px;background:var(--border-color-light)}body.dark-theme .progress-bar::-moz-range-track{background:var(--border-color-dark)}.progress-bar::-moz-range-progress{background:var(--progress-fill-gradient);background-size:200% 100%;background-position:var(--progress-gradient-pos,0) 0;animation:var(--progress-fill-animation);animation-play-state:var(--progress-fill-animation-play-state,paused);border-radius:5px;height:10px}@keyframes progressFillLight{0%{background-position:0 0}100%{background-position:100% 0}}@keyframes progressFillDark{0%{background-position:0 0}100%{background-position:100% 0}}.progress-bar::-webkit-slider-thumb,.volume-bar::-webkit-slider-thumb{-webkit-appearance:none;width:clamp(18px,3.5vh,22px);height:clamp(18px,3.5vh,22px);border-radius:50%;background:var(--primary-color-light);cursor:grab;box-shadow:0 3px 8px rgba(0,0,0,.3);transition:background-color .3s ease,transform .2s ease;margin-top:-6px}body.dark-theme .progress-bar::-webkit-slider-thumb,body.dark-theme .volume-bar::-webkit-slider-thumb{background:var(--primary-color-dark)}.progress-bar::-webkit-slider-thumb:hover,.volume-bar::-webkit-slider-thumb:hover{transform:scale(1.1);cursor:grabbing}.progress-bar::-moz-range-thumb,.volume-bar::-moz-range-thumb{width:clamp(18px,3.5vh,22px);height:clamp(18px,3.5vh,22px);border-radius:50%;background:var(--primary-color-light);cursor:grab;box-shadow:0 3px 8px rgba(0,0,0,.3);transition:background-color .3s ease,transform .2s ease;border:none}body.dark-theme .progress-bar::-moz-range-thumb,body.dark-theme .volume-bar::-moz-range-thumb{background:var(--primary-color-dark)}.progress-bar::-moz-range-thumb:hover,.volume-bar::-moz-range-thumb:hover{transform:scale(1.1);cursor:grabbing}.volume-controls{display:flex;align-items:center;gap:10px;width:100%;margin-top:15px;justify-content:center}.volume-controls i{font-size:1.2em;color:#777;transition:color .3s ease}body.dark-theme .volume-controls i{color:#ccc}.volume-bar{flex-grow:1;-webkit-appearance:none;height:8px;border-radius:4px;background:var(--border-color-light);outline:0;transition:background-color .3s ease;cursor:pointer}body.dark-theme .volume-bar{background:var(--border-color-dark)}.volume-bar::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:var(--progress-fill-gradient) no-repeat;background-size:var(--volume-width,100%) 100%;background-position:var(--volume-gradient-pos,0) 0;animation:var(--progress-fill-animation);animation-play-state:paused}.volume-bar::-moz-range-track{height:8px;border-radius:4px;background:var(--border-color-light)}body.dark-theme .volume-bar::-moz-range-track{background:var(--border-color-dark)}.volume-bar::-moz-range-progress{background:var(--progress-fill-gradient);background-size:200% 100%;background-position:var(--volume-gradient-pos,0) 0;animation:var(--progress-fill-animation);animation-play-state:paused;border-radius:4px;height:8px}.download-btn{background-color:var(--primary-color-light);color:#fff;border:none;padding:clamp(10px,2vh,12px) clamp(20px,4vw,25px);border-radius:10px;cursor:pointer;font-size:clamp(.9em,2vh,1.1em);display:flex;align-items:center;gap:10px;transition:background-color .3s ease,transform .2s ease,box-shadow .3s ease;position:relative;overflow:hidden;z-index:2}body.dark-theme .download-btn{background-color:var(--primary-color-dark)}.download-btn:hover{background-color:#5a4bda;transform:translateY(-3px);box-shadow:0 5px 15px rgba(0,0,0,.2)}body.dark-theme .download-btn:hover{background-color:#dc3e4e}.download-btn.downloading:before{content:'';position:absolute;top:0;left:0;width:var(--download-progress-width,0);height:100%;background-color:rgba(255,255,255,.4);border-radius:8px;transition:width .1s linear;z-index:1}.download-btn.downloading .fa-download{display:none}.download-btn.downloading .fa-spinner{display:inline-block;animation:spin 1s linear infinite}.download-btn .fa-spinner{display:none}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+        .player-container:before{content:'';position:absolute;top:-3px;left:-3px;right:-3px;bottom:-3px;border-radius:23px;z-index:-1;opacity:1;filter:blur(5px);background:linear-gradient(90deg,rgb(var(--gradient-start-rgb)),rgb(var(--gradient-mid-rgb)),rgb(var(--gradient-end-rgb)),rgb(var(--gradient-mid-rgb)),rgb(var(--gradient-start-rgb)));background-size:200% 100%;animation:gradientBorderLight 4s linear infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}body.dark-theme .player-container:before{background:linear-gradient(90deg,rgb(var(--gradient-dark-start-rgb)),rgb(var(--gradient-dark-mid-rgb)),rgb(var(--gradient-dark-end-rgb)),rgb(var(--gradient-dark-mid-rgb)),rgb(var(--gradient-dark-start-rgb)));animation:gradientBorderDark 4s linear infinite}@keyframes gradientBorderLight{0%{background-position:0 50%}100%{background-position:100% 50%}}@keyframes gradientBorderDark{0%{background-position:0 50%}100%{background-position:100% 50%}}.top-controls{position:absolute;top:25px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 25px;width:100%;box-sizing:border-box;z-index:2}.back-button,.theme-toggle{background:0 0;border:none;font-size:1.8em;cursor:pointer;color:var(--text-color-light);transition:color .3s ease,transform .2s ease;outline:0;flex-shrink:0}body.dark-theme .back-button,body.dark-theme .theme-toggle{color:var(--text-color-dark)}.back-button:hover{transform:translateX(-5px) scale(1.05);color:var(--primary-color-light)}body.dark-theme .back-button:hover{color:var(--primary-color-dark)}.theme-toggle:hover{transform:scale(1.1);color:var(--primary-color-light)}body.dark-theme .theme-toggle:hover{color:var(--primary-color-dark)}.cover-image{width:clamp(180px,35vh,280px);height:clamp(180px,35vh,280px);border-radius:15px;object-fit:cover;box-shadow:0 10px 25px rgba(0,0,0,.2);transition:transform .3s ease,box-shadow .3s ease}.cover-image:hover{transform:scale(1.02);box-shadow:0 15px 35px rgba(0,0,0,.3)}.song-details h2{margin:0 0 5px;font-size:clamp(1.5em,4.5vh,2.4em);font-weight:700;color:var(--text-color-light);transition:color .3s ease}body.dark-theme .song-details h2{color:var(--text-color-dark)}.song-details p{margin:0;font-size:clamp(1em,2.5vh,1.3em);color:#888}.song-details .duration{font-size:clamp(.9em,2vh,1.1em);color:#555;font-weight:500}body.dark-theme .song-details .duration{color:#aaa}.player-controls-group{width:100%;display:flex;flex-direction:column;gap:clamp(15px,2vh,25px);align-items:center}.main-controls{display:flex;justify-content:center;align-items:center;gap:clamp(15px,3vw,25px);width:100%}.player-btn{background:var(--primary-color-light);color:#fff;border:none;width:clamp(40px,8vw,55px);height:clamp(40px,8vw,55px);border-radius:50%;font-size:clamp(1.4em,2.5vw,1.8em);display:flex;justify-content:center;align-items:center;cursor:pointer;transition:background-color .3s ease,transform .2s ease,box-shadow .3s ease;box-shadow:0 5px 15px rgba(0,0,0,.25);outline:0}body.dark-theme .player-btn{background:var(--primary-color-dark);box-shadow:0 5px 15px rgba(0,0,0,.4)}.player-btn:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.35);background-color:#5a4bda}body.dark-theme .player-btn:hover{background-color:#dc3e4e}.player-btn.play-pause{width:clamp(55px,11vw,70px);height:clamp(55px,11vw,70px);font-size:clamp(2em,3.5vw,2.5em)}.progress-bar-container{display:flex;align-items:center;width:100%;gap:10px}.current-time,.total-time{font-size:.9em;color:#777;min-width:45px;text-align:center;transition:color .3s ease}body.dark-theme .current-time,body.dark-theme .total-time{color:#ccc}
+
+        /* --- Updated Slider Styles --- */
+        .progress-bar {
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--border-color-light);
+            border-radius: 5px;
+            outline: none;
+            height: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        body.dark-theme .progress-bar {
+            background: var(--border-color-dark);
+        }
+
+        /* Webkit (Chrome, Safari, Opera) */
+        .progress-bar::-webkit-slider-runnable-track {
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(to right, var(--progress-color-light) var(--progress-width, 0%), var(--border-color-light) var(--progress-width, 0%));
+        }
+        body.dark-theme .progress-bar::-webkit-slider-runnable-track {
+            background: linear-gradient(to right, var(--progress-color-dark) var(--progress-width, 0%), var(--border-color-dark) var(--progress-width, 0%));
+        }
+
+        .progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: clamp(18px,3.5vh,22px);
+            height: clamp(18px,3.5vh,22px);
+            background: var(--thumb-color-light);
+            border-radius: 50%;
+            cursor: grab;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: -6px;
+        }
+        body.dark-theme .progress-bar::-webkit-slider-thumb {
+            background: var(--thumb-color-dark);
+        }
+        .progress-bar::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            cursor: grabbing;
+        }
+
+        /* Moz (Firefox) */
+        .progress-bar::-moz-range-track {
+            height: 10px;
+            border-radius: 5px;
+            background: var(--border-color-light);
+        }
+        body.dark-theme .progress-bar::-moz-range-track {
+            background: var(--border-color-dark);
+        }
+        
+        .progress-bar::-moz-range-progress {
+            background: var(--progress-color-light);
+            height: 10px;
+            border-radius: 5px;
+        }
+        body.dark-theme .progress-bar::-moz-range-progress {
+            background: var(--progress-color-dark);
+        }
+        
+        .progress-bar::-moz-range-thumb {
+            width: clamp(18px,3.5vh,22px);
+            height: clamp(18px,3.5vh,22px);
+            background: var(--thumb-color-light);
+            border-radius: 50%;
+            cursor: grab;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        body.dark-theme .progress-bar::-moz-range-thumb {
+            background: var(--thumb-color-dark);
+        }
+        .progress-bar::-moz-range-thumb:hover {
+            transform: scale(1.1);
+            cursor: grabbing;
+        }
+        
+        .progress-bar {
+            flex-grow: 1;
+            height: 10px;
+        }
+        .download-btn{background-color:var(--primary-color-light);color:#fff;border:none;padding:clamp(10px,2vh,12px) clamp(20px,4vw,25px);border-radius:10px;cursor:pointer;font-size:clamp(.9em,2vh,1.1em);display:flex;align-items:center;gap:10px;transition:background-color .3s ease,transform .2s ease,box-shadow .3s ease;position:relative;overflow:hidden;z-index:2}body.dark-theme .download-btn{background-color:var(--primary-color-dark)}.download-btn:hover{background-color:#5a4bda;transform:translateY(-3px);box-shadow:0 5px 15px rgba(0,0,0,.2)}body.dark-theme .download-btn:hover{background-color:#dc3e4e}.download-btn.downloading{cursor:not-allowed}.download-btn.downloading:before{content:'';position:absolute;top:0;left:0;width:var(--download-progress-width,0);height:100%;background-color:rgba(255,255,255,.4);border-radius:8px;transition:width .1s linear;z-index:1}.download-btn.downloading .fa-download{display:none}.download-btn.downloading .fa-spinner{display:inline-block;animation:spin 1s linear infinite}.download-btn .fa-spinner{display:none}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
     </style>
 </head>
 <body>
@@ -124,11 +209,6 @@
                     <input type="range" id="progress-bar" class="progress-bar" value="0" min="0" max="100">
                     <div id="total-time" class="total-time">0:00</div>
                 </div>
-                <div class="volume-controls">
-                    <i class="fas fa-volume-down"></i>
-                    <input type="range" id="volume-bar" class="volume-bar" value="100" min="0" max="100">
-                    <i class="fas fa-volume-up"></i>
-                </div>
             </div>
             
             <button id="download-btn" class="download-btn">
@@ -157,13 +237,13 @@
             const progressBar = document.getElementById('progress-bar');
             const currentTimeSpan = document.getElementById('current-time');
             const totalTimeSpan = document.getElementById('total-time');
-            const volumeBar = document.getElementById('volume-bar');
+            const downloadBtn = document.getElementById('download-btn');
             
             let currentSongIndex = 0;
             let isDraggingProgressBar = false;
             let musicData = [];
 
-            // --- ** NEW: Load Data From Session Storage ** ---
+            // --- Load Data From Session Storage ---
             try {
                 const storedData = sessionStorage.getItem('musicData');
                 if (storedData) {
@@ -191,13 +271,11 @@
                 return `${m}:${s < 10 ? '0' : ''}${s}`;
             }
 
-            // --- Load Song (Now instant using stored data) ---
             function loadSong(index) {
                 if (index < 0 || index >= musicData.length) return;
                 currentSongIndex = index;
                 const song = musicData[currentSongIndex];
 
-                // Instantly update UI from stored data
                 coverImage.src = song.cover;
                 songTitle.textContent = song.title;
                 songArtist.textContent = song.artist || ' ';
@@ -205,13 +283,16 @@
                 totalTimeSpan.textContent = song.duration || '0:00';
                 audio.src = song.src;
 
-                // Reset player state
                 playPauseBtn.querySelector('i').className = 'fas fa-play';
                 progressBar.value = 0;
-                progressBar.style.setProperty('--progress-width', '0%');
+                updateProgressBarFill();
                 currentTimeSpan.textContent = '0:00';
                 audio.pause();
-                stopProgressBarAnimation();
+            }
+
+            function updateProgressBarFill() {
+                const value = progressBar.value;
+                progressBar.style.setProperty('--progress-width', `${value}%`);
             }
 
             playPauseBtn.addEventListener('click', () => {
@@ -219,38 +300,31 @@
                 if (isPaused) {
                     audio.play();
                     playPauseBtn.querySelector('i').className = 'fas fa-pause';
-                    startProgressBarAnimation();
                 } else {
                     audio.pause();
                     playPauseBtn.querySelector('i').className = 'fas fa-play';
-                    stopProgressBarAnimation();
                 }
             });
 
             audio.addEventListener('timeupdate', () => {
                 if (!isDraggingProgressBar && audio.duration) {
                     progressBar.value = (audio.currentTime / audio.duration) * 100;
-                    progressBar.style.setProperty('--progress-width', `${progressBar.value}%`);
+                    updateProgressBarFill();
                     currentTimeSpan.textContent = formatTime(audio.currentTime);
                 }
             });
 
-            // This listener updates the progress bar's total time for accuracy once loaded
             audio.addEventListener('loadedmetadata', () => {
                 totalTimeSpan.textContent = formatTime(audio.duration);
             });
 
             audio.addEventListener('ended', playNextSong);
 
-            progressBar.addEventListener('mousedown', () => { isDraggingProgressBar = true; stopProgressBarAnimation(); });
-            progressBar.addEventListener('mouseup', () => { isDraggingProgressBar = false; if (!audio.paused) startProgressBarAnimation(); });
+            progressBar.addEventListener('mousedown', () => { isDraggingProgressBar = true; });
+            progressBar.addEventListener('mouseup', () => { isDraggingProgressBar = false; });
             progressBar.addEventListener('input', () => {
                 if(audio.duration) audio.currentTime = (progressBar.value / 100) * audio.duration;
-            });
-
-            volumeBar.addEventListener('input', () => {
-                audio.volume = volumeBar.value / 100;
-                volumeBar.style.setProperty('--volume-width', `${volumeBar.value}%`);
+                updateProgressBarFill();
             });
 
             function playNextSong() {
@@ -270,16 +344,76 @@
             nextBtn.addEventListener('click', playNextSong);
             prevBtn.addEventListener('click', playPrevSong);
 
-            function startProgressBarAnimation() { progressBar.style.setProperty('--progress-fill-animation-play-state', 'running'); }
-            function stopProgressBarAnimation() { progressBar.style.setProperty('--progress-fill-animation-play-state', 'paused'); }
+            // --- Download Button Functionality ---
+            downloadBtn.addEventListener('click', () => {
+                const song = musicData[currentSongIndex];
+                if (!song || !song.src) {
+                    console.error("No song or source available to download.");
+                    return;
+                }
+
+                downloadBtn.classList.add('downloading');
+                downloadBtn.disabled = true;
+
+                fetch(song.src)
+                    .then(response => {
+                        const totalSize = response.headers.get('content-length');
+                        let downloadedSize = 0;
+
+                        const reader = response.body.getReader();
+
+                        return new ReadableStream({
+                            start(controller) {
+                                function push() {
+                                    reader.read().then(({ done, value }) => {
+                                        if (done) {
+                                            controller.close();
+                                            return;
+                                        }
+                                        downloadedSize += value.length;
+                                        const progress = (totalSize) ? (downloadedSize / totalSize) * 100 : 0;
+                                        downloadBtn.style.setProperty('--download-progress-width', `${progress}%`);
+                                        controller.enqueue(value);
+                                        push();
+                                    }).catch(error => {
+                                        console.error('Download error:', error);
+                                        controller.error(error);
+                                    });
+                                }
+                                push();
+                            }
+                        });
+                    })
+                    .then(stream => new Response(stream))
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = `${song.title}.mp3`;
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                    })
+                    .catch(error => {
+                        console.error('Download failed:', error);
+                        alert('Download failed. Please try again.');
+                    })
+                    .finally(() => {
+                        downloadBtn.classList.remove('downloading');
+                        downloadBtn.disabled = false;
+                        downloadBtn.style.setProperty('--download-progress-width', '0%');
+                    });
+            });
 
             // --- Initialization ---
             const urlParams = new URLSearchParams(window.location.search);
             const initialSongIndex = parseInt(urlParams.get('songIndex'), 10) || 0;
             loadSong(initialSongIndex);
-
-            volumeBar.value = audio.volume * 100;
-            volumeBar.style.setProperty('--volume-width', `${volumeBar.value}%`);
+            
+            // Re-initialize progress bar fill
+            updateProgressBarFill();
         });
     </script>
 </body>
